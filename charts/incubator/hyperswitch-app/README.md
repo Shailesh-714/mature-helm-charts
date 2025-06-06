@@ -2,7 +2,7 @@
 
 Hyperswitch is a community-led, open payments switch designed to empower digital businesses by providing fast, reliable, and affordable access to the best payments infrastructure.
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 # Deploy on Kubernetes using Helm
 
@@ -23,16 +23,18 @@ cd hyperswitch-helm/charts/incubator/hyperswitch-stack
 
 Before installing the service make sure you labels your kubernetes nodes and create a namespace `hyperswitch`
 Note: minimum --memory 6000 --cpus 4 needed
+
 ```bash
 kubectl create namespace hyperswitch
 ```
+
 Use below command to install hyperswitch services with above configs
 
 ```bash
 helm install hyperswitch-v1 . -n hyperswitch
 ```
 
-That's it! Hyperswitch should be up and running on your AWS account  :tada: :tada:
+That's it! Hyperswitch should be up and running on your AWS account :tada: :tada:
 
 ## Post-Deployment Checklist
 
@@ -40,13 +42,13 @@ After deploying the Helm chart, you should verify that everything is working cor
 
 ### App Server
 
-* [ ] &#x20;Check that `hyperswitch_server/health` returns `health is good`
+- [ ] &#x20;Check that `hyperswitch_server/health` returns `health is good`
 
 ### Control Center
 
-* [ ] &#x20;Verify if you are able to sign in or sign up
-* [ ] &#x20;Verify if you are able to [create API key](https://opensource.hyperswitch.io/run-hyperswitch-locally/account-setup/using-hyperswitch-control-center#user-content-create-an-api-key)
-* [ ] &#x20;Verify if you are able to [configure a new payment processor](https://opensource.hyperswitch.io/run-hyperswitch-locally/account-setup/using-hyperswitch-control-center#add-a-payment-processor)
+- [ ] &#x20;Verify if you are able to sign in or sign up
+- [ ] &#x20;Verify if you are able to [create API key](https://opensource.hyperswitch.io/run-hyperswitch-locally/account-setup/using-hyperswitch-control-center#user-content-create-an-api-key)
+- [ ] &#x20;Verify if you are able to [configure a new payment processor](https://opensource.hyperswitch.io/run-hyperswitch-locally/account-setup/using-hyperswitch-control-center#add-a-payment-processor)
 
 ## 💳 Test a payment
 
@@ -75,7 +77,8 @@ By default card vault and its dependencies are installed, however you need to cr
 
     # Generating the public keys
     openssl rsa -in locker-private-key.pem -pubout -out locker-public-key.pem
-    openssl rsa -in tenant-private-key.pem -pubout -out tenant-public-key.pem 
+    openssl rsa -in tenant-private-key.pem -pubout -out tenant-public-key.pem
+
 </p>
 </details>
 <details>
@@ -114,7 +117,7 @@ By default card vault and its dependencies are installed, however you need to cr
   Once the locker is up and running, use the 2 key custodian keys generated earlier securely to unlock the locker for use.
   Go to the respective locker Pod, open its shell and run below cURLs
 
-  The following cURLs are to be used to provide keys
+The following cURLs are to be used to provide keys
 
     # temporary turn of saving to history to run the following commands
     unset HISTFILE
@@ -123,8 +126,9 @@ By default card vault and its dependencies are installed, however you need to cr
     curl -X POST -H "Content-Type: application/json" -d '{"key": "<key 1>"}' http://localhost:8080/custodian/key1
     curl -X POST -H "Content-Type: application/json" -d '{"key": "<key 2>"}' http://localhost:8080/custodian/key2
     curl -X POST http://localhost:8080/custodian/decrypt
-   
-  If the last cURL replies with `Decrypted Successfully`, we are ready to use the locker.
+
+If the last cURL replies with `Decrypted Successfully`, we are ready to use the locker.
+
    </p>
 </details>
 
@@ -136,19 +140,20 @@ Refer our [postman collection](https://www.postman.com/hyperswitch/workspace/hyp
 
 ## Requirements
 
-| Repository | Name | Version |
-|------------|------|---------|
-| file://../hyperswitch-card-vault | hyperswitch-card-vault | 0.1.0 |
-| https://charts.bitnami.com/bitnami | clickhouse | 6.3.3 |
-| https://charts.bitnami.com/bitnami | kafka | 31.0.0 |
-| https://charts.bitnami.com/bitnami | postgresql | 15.5.38 |
-| https://charts.bitnami.com/bitnami | redis | 18.6.1 |
-| https://codecentric.github.io/helm-charts | mailhog | 4.0.0 |
-| https://grafana.github.io/helm-charts | loki-stack | 2.10.2 |
-| https://helm.vector.dev | vector | 0.37.0 |
+| Repository                                                 | Name                    | Version |
+| ---------------------------------------------------------- | ----------------------- | ------- |
+| file://../hyperswitch-card-vault                           | hyperswitch-card-vault  | 0.1.0   |
+| https://charts.bitnami.com/bitnami                         | clickhouse              | 6.3.3   |
+| https://charts.bitnami.com/bitnami                         | kafka                   | 31.0.0  |
+| https://charts.bitnami.com/bitnami                         | postgresql              | 15.5.38 |
+| https://charts.bitnami.com/bitnami                         | redis                   | 18.6.1  |
+| https://codecentric.github.io/helm-charts                  | mailhog                 | 4.0.0   |
+| https://grafana.github.io/helm-charts                      | loki-stack              | 2.10.2  |
+| https://helm.vector.dev                                    | vector                  | 0.37.0  |
 | https://open-telemetry.github.io/opentelemetry-helm-charts | opentelemetry-collector | 0.120.0 |
 
 ## Values
+
 <h3>Dependencies configuration</h3>
 <table height="400px">
 <thead>
@@ -2302,4 +2307,3 @@ Refer our [postman collection](https://www.postman.com/hyperswitch/workspace/hyp
   </tr>
 </tbody>
 </table>
-
