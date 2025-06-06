@@ -1,0 +1,167 @@
+# .gitignore for Hyperswitch Helm Repository
+
+# Helm specific
+*.tgz
+charts/*/charts/
+charts/*/Chart.lock
+*.lock
+requirements.lock
+index.yaml
+
+# Chart Releaser artifacts
+.cr-release-packages/
+.cr-index/
+
+# Dependency directories
+charts/*/charts/*.tgz
+charts/incubator/*/charts/*.tgz
+
+# Generated documentation (if auto-generated from templates)
+charts/*/README.md
+
+# Temporary Helm files
+*.tmp
+.helm/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+
+# Windows
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.tmproj
+.sublime-*
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Emacs
+\#*\#
+.\#*
+*~
+.#*
+
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Task runner artifacts
+.task/
+
+# Log files
+*.log
+logs/
+
+# Temporary directories
+tmp/
+temp/
+.tmp/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Node.js (if you have any JS tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Python (if you have any Python tooling)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Go (if you have any Go tooling)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Kubernetes
+kubeconfig
+*.kubeconfig
+
+# Secrets and sensitive files
+*.key
+*.pem
+*.crt
+
+# Local development
+.env
+.env.local
+.env.*.local
+local-values.yaml
+dev-values.yaml
+*-local.yaml
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Archive files
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.rar
+*.7z
+
+# Version directories (your old manual structure)
+v0.*/
+
+# Chart testing
+ct.yaml
+kind-cluster-*
+
+# Custom additions for your specific setup
+tmp_clickhouse/
+.helmignore.backup
