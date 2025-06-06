@@ -1,0 +1,218 @@
+# loadbalancer security group
+# @ignored
+loadBalancer:
+  targetSecurityGroup: &lb_security_group lg-security-group
+
+# @ignored
+service:
+  type: ClusterIP
+  port: 80
+
+# @ignored
+services:
+  router:
+    host: &router_host http://localhost:8080
+  sdk:
+    host: &web_sdk_host http://localhost:9050
+
+global:
+  tolerations: []
+  # @ignored
+  # Eg. 
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #         - matchExpressions:
+  #             - key: node-type
+  #               operator: In
+  #               values:
+  #                 - generic-compute
+  affinity: {}
+
+# @ignored
+hyperswitch-web:
+  fullnameOverride: "hyperswitch-web"
+  enabled: true
+  sdkDemo:
+    enabled: false
+  image:
+    pullPolicy: IfNotPresent
+  podAnnotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+  autoBuild:
+    enable: true
+    forceBuild: true
+    gitCloneParam: 
+      gitVersion: 0.121.2
+    nginxConfig:
+      extraPath: v1
+    buildParam:
+      envSdkUrl: *web_sdk_host
+      envBackendUrl: *router_host
+      envLogsUrl: http://localhost:3103
+  service:
+    port: 9050
+  loadBalancer:
+    targetSecurityGroup: "loadbalancer-sg"
+  tolerations: []
+  ingress:
+    enabled: true
+    className: "alb"
+    apiVersion: networking.k8s.io/v1
+    annotations:
+      alb.ingress.kubernetes.io/backend-protocol: HTTP
+      alb.ingress.kubernetes.io/backend-protocol-version: HTTP1
+      alb.ingress.kubernetes.io/group.name: hyperswitch-web-alb-ingress-group
+      alb.ingress.kubernetes.io/ip-address-type: ipv4
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/load-balancer-name: hyperswitch-web
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/security-groups: *lb_security_group
+      alb.ingress.kubernetes.io/tags: stack=hyperswitch-lb
+      alb.ingress.kubernetes.io/target-type: ip
+    hosts:
+      - http: 
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hyperswitch-web
+                port:
+                  number: 80
+# @ignored
+hyperswitch-app:
+  initDB:
+    enable: true
+  loadBalancer:
+    targetSecurityGroup: *lb_security_group
+  services:
+    router:
+      version: v1.114.0
+      image: docker.juspay.io/juspaydotin/hyperswitch-router:v1.114.0
+      host: *router_host
+    consumer:
+      image: docker.juspay.io/juspaydotin/hyperswitch-consumer:v1.114.0
+    producer:
+      image: docker.juspay.io/juspaydotin/hyperswitch-producer:v1.114.0
+    controlCenter:
+      image: docker.juspay.io/juspaydotin/hyperswitch-control-center:v1.37.1
+    sdk:
+      host: *web_sdk_host
+      version: 0.121.2
+      subversion: v1
+  server:
+    replicas: 1
+    secrets:
+      # Follow https://github.com/juspay/hyperswitch/tree/main/crates/analytics#setting-up-forex-apis to get the forex api key
+      forex_api_key: forex_api_key
+      forex_fallback_api_key: forex_fallback_api_key
+    locker:
+        locker_enabled: true
+    run_env: sandbox
+    email:
+      active_email_client: SMTP
+  controlCenter:
+    env:
+      default__features__email: "true"
+      default__features__totp: "true"
+      default__features__test_processors: "true"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+  
+  hyperswitch-card-vault:
+    enabled: true
+    server:
+      image: docker.juspay.io/juspaydotin/hyperswitch-card-vault:v0.6.5-dev
+      tenant_secrets: 
+        hyperswitch :  
+          master_key : "8283d68fdbd89a78aef9bed8285ed1cd9310012f660eefbad865f20a3f3dd9498f06147da6a7d9b84677cafca95024990b3d2296fbafc55e10dd76df" 
+          public_key : "" 
+          schema : "public" 
+                  
+    initDB:
+      enable: true
+    postgresql:
+      primary:
+        tolerations: []
+  redis:
+    master:
+      tolerations: []
+  postgresql:
+    primary:
+      tolerations: []
+    readReplicas:
+      tolerations: []
+  kafka:
+    controller:
+      tolerations: []
+    broker:
+      tolerations: []
+    zookeeper:
+      tolerations: []
+    provisioning:
+      tolerations: []
+  clickhouse:
+    tolerations: []
+    zookeeper:
+      tolerations: []
+  mailhog:
+    tolerations: []
+  loki-stack:
+    loki:
+      tolerations: []
+    promtail:
+      tolerations: []
+    grafana:
+      tolerations: []
+    prometheus: 
+      prometheus-pushgateway:
+        tolerations: []
+  vector:
+    tolerations: []
+
+
+prometheus:
+  host: "prometheus-server"
+  port: 80
+  enabled: true
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 15s
+  prometheus-pushgateway:
+    tolerations: []
+
+  scrape_configs:
+  # Scrape Kubernetes pods for CPU and Memory usage
+  - job_name: "kubernetes-pods"
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        target_label: __address__
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: "$1:$2"
+
+  - job_name: "kubernetes-nodes"
+    kubernetes_sd_configs:
+      - role: node
+    relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+    static_configs:
+      - targets:
+          - "node-exporter:9100"
