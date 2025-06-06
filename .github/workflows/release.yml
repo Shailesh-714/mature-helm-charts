@@ -61,5 +61,6 @@ jobs:
             if [ -z "${pkg:-}" ]; then
               break
             fi
-            helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/mature-helm-charts"
+            REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+            helm push "${pkg}" "oci://ghcr.io/${REPO_OWNER}/mature-helm-charts"
           done
