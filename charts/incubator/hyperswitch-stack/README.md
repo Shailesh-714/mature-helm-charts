@@ -40,11 +40,11 @@ Hyperswitch is a community-led, open payments switch designed to empower digital
 
 Here are the components of Hyperswitch that deliver the whole solution:
 
-- [Hyperswitch Backend](https://github.com/juspay/hyperswitch): Powering Payment Processing
+* [Hyperswitch Backend](https://github.com/juspay/hyperswitch): Powering Payment Processing
 
-- [SDK (Frontend)](https://github.com/juspay/hyperswitch-web): Simplifying Integration and Powering the UI
+* [SDK (Frontend)](https://github.com/juspay/hyperswitch-web): Simplifying Integration and Powering the UI
 
-- [Control Centre](https://github.com/juspay/hyperswitch-control-center): Managing Operations with Ease
+* [Control Centre](https://github.com/juspay/hyperswitch-control-center): Managing Operations with Ease
 
 Jump in and contribute to these repositories to help improve and expand Hyperswitch!
 
@@ -79,18 +79,16 @@ helm repo update
 
 Before installing the service make sure you labels your kubernetes nodes and create a namespace `hyperswitch`
 Note: minimum --memory 6000 --cpus 4 needed
-
 ```bash
 kubectl create namespace hyperswitch
 ```
-
 Use below command to install hyperswitch services with above configs
 
 ```bash
 helm install hypers-v1 hyperswitch/hyperswitch-stack -n hyperswitch
 ```
 
-That's it! Hyperswitch should be up and running on your Cluster :tada: :tada:
+That's it! Hyperswitch should be up and running on your Cluster  :tada: :tada:
 
 ## Post-Deployment Checklist
 
@@ -98,13 +96,13 @@ After deploying the Helm chart, you should verify that everything is working cor
 
 ### App Server
 
-- [ ] &#x20;Check that `hyperswitch_server/health` returns `health is good`
+* [ ] &#x20;Check that `hyperswitch_server/health` returns `health is good`
 
 ### Control Center
 
-- [ ] &#x20;Verify if you are able to sign in or sign up
-- [ ] &#x20;Verify if you are able to [create API key](https://docs.hyperswitch.io/hyperswitch-open-source/account-setup/using-hyperswitch-control-center#user-content-create-an-api-key)
-- [ ] &#x20;Verify if you are able to [configure a new payment processor](https://docs.hyperswitch.io/hyperswitch-open-source/account-setup/using-hyperswitch-control-center#add-a-payment-processor)
+* [ ] &#x20;Verify if you are able to sign in or sign up
+* [ ] &#x20;Verify if you are able to [create API key](https://docs.hyperswitch.io/hyperswitch-open-source/account-setup/using-hyperswitch-control-center#user-content-create-an-api-key)
+* [ ] &#x20;Verify if you are able to [configure a new payment processor](https://docs.hyperswitch.io/hyperswitch-open-source/account-setup/using-hyperswitch-control-center#add-a-payment-processor)
 
 ## 💳 Test a payment
 
@@ -133,8 +131,7 @@ By default card vault and its dependencies are installed, however you need to cr
 
     # Generating the public keys
     openssl rsa -in locker-private-key.pem -pubout -out locker-public-key.pem
-    openssl rsa -in tenant-private-key.pem -pubout -out tenant-public-key.pem
-
+    openssl rsa -in tenant-private-key.pem -pubout -out tenant-public-key.pem 
 </p>
 </details>
 <details>
@@ -173,7 +170,7 @@ By default card vault and its dependencies are installed, however you need to cr
   Once the locker is up and running, use the 2 key custodian keys generated earlier securely to unlock the locker for use.
   Go to the respective locker Pod, open its shell and run below cURLs
 
-The following cURLs are to be used to provide keys
+  The following cURLs are to be used to provide keys
 
     # temporary turn of saving to history to run the following commands
     unset HISTFILE
@@ -182,9 +179,8 @@ The following cURLs are to be used to provide keys
     curl -X POST -H "Content-Type: application/json" -d '{"key": "<key 1>"}' http://localhost:8080/custodian/key1
     curl -X POST -H "Content-Type: application/json" -d '{"key": "<key 2>"}' http://localhost:8080/custodian/key2
     curl -X POST http://localhost:8080/custodian/decrypt
-
-If the last cURL replies with `Decrypted Successfully`, we are ready to use the locker.
-
+   
+  If the last cURL replies with `Decrypted Successfully`, we are ready to use the locker.
    </p>
 </details>
 
@@ -203,7 +199,6 @@ The community and core team are available in [GitHub Discussions](https://github
 Join our Conversation in [Slack](https://join.slack.com/t/hyperswitch-io/shared_invite/zt-2jqxmpsbm-WXUENx022HjNEy~Ark7Orw), [Discord](https://discord.gg/wJZ7DVW8mm), [Twitter](https://x.com/hyperswitchio)
 
 When you want others to use the changes you have added you need to package it and then index it
-
 ```bash
 # To package and index the new changes
 task pihh
@@ -213,14 +208,13 @@ task ur
 
 ## Requirements
 
-| Repository                                         | Name            | Version |
-| -------------------------------------------------- | --------------- | ------- |
-| file://../hyperswitch-app                          | hyperswitch-app | 0.2.5   |
-| file://../hyperswitch-web                          | hyperswitch-web | 0.2.5   |
-| https://prometheus-community.github.io/helm-charts | prometheus      | 27.8.0  |
+| Repository | Name | Version |
+|------------|------|---------|
+| file://../hyperswitch-app | hyperswitch-app | 0.2.4 |
+| file://../hyperswitch-web | hyperswitch-web | 0.2.4 |
+| https://prometheus-community.github.io/helm-charts | prometheus | 27.8.0 |
 
 ## Values
-
 <h3>Dependencies configuration</h3>
 <table height="400px">
 <thead>
@@ -2616,3 +2610,4 @@ task ur
   </tr>
 </tbody>
 </table>
+
