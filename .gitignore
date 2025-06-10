@@ -4,6 +4,7 @@
 *.tgz
 charts/*/charts/
 charts/*/Chart.lock
+charts/incubator/*/charts/
 *.lock
 requirements.lock
 index.yaml
@@ -11,13 +12,6 @@ index.yaml
 # Chart Releaser artifacts
 .cr-release-packages/
 .cr-index/
-
-# Dependency directories
-charts/*/charts/*.tgz
-charts/incubator/*/charts/*.tgz
-
-# Generated documentation (if auto-generated from templates)
-charts/*/README.md
 
 # Temporary Helm files
 *.tmp
@@ -72,7 +66,6 @@ $RECYCLE.BIN/
 .#*
 
 # JetBrains
-.idea/
 *.iml
 *.ipr
 *.iws
@@ -94,36 +87,6 @@ dist/
 build/
 target/
 
-# Node.js (if you have any JS tooling)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.yarn-integrity
-
-# Python (if you have any Python tooling)
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Go (if you have any Go tooling)
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
-go.work
-
 # Kubernetes
 kubeconfig
 *.kubeconfig
@@ -137,9 +100,6 @@ kubeconfig
 .env
 .env.local
 .env.*.local
-local-values.yaml
-dev-values.yaml
-*-local.yaml
 
 # Backup files
 *.bak
@@ -154,14 +114,3 @@ dev-values.yaml
 *.tar.xz
 *.rar
 *.7z
-
-# Version directories (your old manual structure)
-v0.*/
-
-# Chart testing
-ct.yaml
-kind-cluster-*
-
-# Custom additions for your specific setup
-tmp_clickhouse/
-.helmignore.backup
