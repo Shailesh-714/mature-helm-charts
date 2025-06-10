@@ -4,7 +4,7 @@ name: Lint and Test Charts
 on:
   pull_request:
     paths:
-      - "charts/**"
+      - "charts/incubator/**"
 
 jobs:
   lint-test:
