@@ -1,10 +1,35 @@
-# .github/workflows/lint-test.yml
 name: Lint and Test Charts
 
 on:
-  pull_request:
-    paths:
-      - "charts/incubator/**"
+  workflow_call:
+    inputs:
+      ct_configfile:
+        description: location of the ct config file
+        default: ct.yaml
+        required: false
+        type: string
+      ct_check_version_increment:
+        description: whether to check for version bump requirement
+        default: true
+        required: false
+        type: boolean
+      helm_version:
+        description: version of the helm binary
+        default: v3.14.0
+        required: false
+        type: string
+      kind_kubectl_version:
+        description: version of the kubectl binary used for the kind cluster
+        required: false
+        type: string
+      kind_node_image:
+        description: image reference for the node containers in the kind_cluster
+        required: false
+        type: string
+
+env:
+  CT_CONFIGFILE: ${{ inputs.ct_configfile }}
+  CT_CHECK_VERSION_INCREMENT: ${{ inputs.ct_check_version_increment }}
 
 jobs:
   lint-test:
@@ -14,46 +39,42 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.14.0
+          version: ${{ inputs.helm_version }}
 
-      - uses: actions/setup-python@v5
+      # Python is required because `ct lint` runs Yamale (https://github.com/23andMe/Yamale) and
+      # yamllint (https://github.com/adrienverge/yamllint) which require Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
-          check-latest: true
+          python-version: 3.12
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.7.0
+        uses: helm/chart-testing-action@v2.1.0
 
-      - name: Add helm repos
+      - name: Run chart-testing (list-changed)
+        id: list-changed
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add grafana https://grafana.github.io/helm-charts
-          helm repo add opentelemetry https://open-telemetry.github.io/opentelemetry-helm-charts
-          helm repo add vector https://helm.vector.dev
-          helm repo add codecentric https://codecentric.github.io/helm-charts
-          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo update
-
-      - name: Run chart-testing (list)
-        id: list
-        run: |
-          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          changed=$(ct list-changed --config "${CT_CONFIGFILE}")
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run chart-testing (lint)
-        if: steps.list.outputs.changed == 'true'
-        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+        run: ct lint --config "${CT_CONFIGFILE}" --check-version-increment="${CT_CHECK_VERSION_INCREMENT}"
 
       - name: Create kind cluster
-        if: steps.list.outputs.changed == 'true'
-        uses: helm/kind-action@v1.10.0
+        uses: helm/kind-action@v1.8.0
+        if: steps.list-changed.outputs.changed == 'true'
+        with:
+          kubectl_version: ${{ inputs.kind_kubectl_version }}
+          node_image: ${{ inputs.kind_node_image }}
 
       - name: Run chart-testing (install)
-        if: steps.list.outputs.changed == 'true'
-        run: ct install --target-branch ${{ github.event.repository.default_branch }}
+        run: |
+          changed=$(ct list-changed --config "${CT_CONFIGFILE}")
+          ct install --config "${CT_CONFIGFILE}"
