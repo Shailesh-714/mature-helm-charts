@@ -34,4 +34,3 @@ dependencies:
     version: "27.8.0"
     repository: https://prometheus-community.github.io/helm-charts
     condition: prometheus.enabled
-#
