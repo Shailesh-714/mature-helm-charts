@@ -229,63 +229,63 @@ task ur
     <td><div><code>[]</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L184">prometheus.enabled</a></div></td>
+    <td><div><a href="./values.yaml#L183">prometheus.enabled</a></div></td>
     <td><div><code>true</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L187">prometheus.global.evaluation_interval</a></div></td>
+    <td><div><a href="./values.yaml#L186">prometheus.global.evaluation_interval</a></div></td>
     <td><div><code>"15s"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L186">prometheus.global.scrape_interval</a></div></td>
+    <td><div><a href="./values.yaml#L185">prometheus.global.scrape_interval</a></div></td>
     <td><div><code>"15s"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L182">prometheus.host</a></div></td>
+    <td><div><a href="./values.yaml#L181">prometheus.host</a></div></td>
     <td><div><code>"prometheus-server"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L183">prometheus.port</a></div></td>
+    <td><div><a href="./values.yaml#L182">prometheus.port</a></div></td>
     <td><div><code>80</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L189">prometheus.prometheus-pushgateway.tolerations</a></div></td>
+    <td><div><a href="./values.yaml#L188">prometheus.prometheus-pushgateway.tolerations</a></div></td>
     <td><div><code>[]</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L193">prometheus.scrape_configs[0].job_name</a></div></td>
+    <td><div><a href="./values.yaml#L192">prometheus.scrape_configs[0].job_name</a></div></td>
     <td><div><code>"kubernetes-pods"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L195">prometheus.scrape_configs[0].kubernetes_sd_configs[0].role</a></div></td>
+    <td><div><a href="./values.yaml#L194">prometheus.scrape_configs[0].kubernetes_sd_configs[0].role</a></div></td>
     <td><div><code>"pod"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L198">prometheus.scrape_configs[0].relabel_configs[0].action</a></div></td>
+    <td><div><a href="./values.yaml#L197">prometheus.scrape_configs[0].relabel_configs[0].action</a></div></td>
     <td><div><code>"keep"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L199">prometheus.scrape_configs[0].relabel_configs[0].regex</a></div></td>
+    <td><div><a href="./values.yaml#L198">prometheus.scrape_configs[0].relabel_configs[0].regex</a></div></td>
     <td><div><code>true</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L197">prometheus.scrape_configs[0].relabel_configs[0].source_labels[0]</a></div></td>
+    <td><div><a href="./values.yaml#L196">prometheus.scrape_configs[0].relabel_configs[0].source_labels[0]</a></div></td>
     <td><div><code>"__meta_kubernetes_pod_annotation_prometheus_io_scrape"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L201">prometheus.scrape_configs[0].relabel_configs[1].action</a></div></td>
+    <td><div><a href="./values.yaml#L200">prometheus.scrape_configs[0].relabel_configs[1].action</a></div></td>
     <td><div><code>"replace"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L203">prometheus.scrape_configs[0].relabel_configs[1].regex</a></div></td>
+    <td><div><a href="./values.yaml#L202">prometheus.scrape_configs[0].relabel_configs[1].regex</a></div></td>
     <td><div><code>"(.+)"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L200">prometheus.scrape_configs[0].relabel_configs[1].source_labels[0]</a></div></td>
+    <td><div><a href="./values.yaml#L199">prometheus.scrape_configs[0].relabel_configs[1].source_labels[0]</a></div></td>
     <td><div><code>"__meta_kubernetes_pod_annotation_prometheus_io_path"</code></div></td>
     <td></td>
   </tr><tr>
-    <td><div><a href="./values.yaml#L202">prometheus.scrape_configs[0].relabel_configs[1].target_label</a></div></td>
+    <td><div><a href="./values.yaml#L201">prometheus.scrape_configs[0].relabel_configs[1].target_label</a></div></td>
     <td><div><code>"__metrics_path__"</code></div></td>
     <td></td>
   </tr><tr>
