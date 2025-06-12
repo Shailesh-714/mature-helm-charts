@@ -28,7 +28,7 @@ jobs:
           docker run --rm \
             --volume "$(pwd):/helm-docs" \
             -u "$(id -u):$(id -g)" \
-            jnorwood/helm-docs:v1.8.1
+            jnorwood/helm-docs:latest
 
           # Check for uncommitted changes after helm-docs
           if ! git diff --exit-code; then
