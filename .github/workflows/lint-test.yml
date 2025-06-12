@@ -107,5 +107,8 @@ jobs:
             exit 0
           fi
 
+          echo "Creating required namespaces..."
+          kubectl create namespace hyperswitch || true
+
           # Run `ct install` only on filtered charts
           ct install --config "${CT_CONFIGFILE}" --charts "${filtered_charts[@]}"
