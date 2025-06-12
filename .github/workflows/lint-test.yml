@@ -77,4 +77,14 @@ jobs:
       - name: Run chart-testing (install)
         run: |
           changed=$(ct list-changed --config "${CT_CONFIGFILE}")
+          if [[ "$changed" == "charts/incubator/hyperswitch-istio" ]]; then
+            # Do not run `ct install` for enterprise-metrics
+            exit 0
+          elif [[ "$changed" == "charts/incubator/hyperswitch-keymanager" ]]; then
+            # Do not run `ct install` for snyk-exporter as it requires Snyk API token
+            exit 0
+          elif [[ "$changed" == "charts/incubator/hyperswitch-web" ]]; then
+            # Do not run `ct install` for cloudcost-exporter as it requires IRSA
+            exit 0
+          fi
           ct install --config "${CT_CONFIGFILE}"
