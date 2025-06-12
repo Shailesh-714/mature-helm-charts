@@ -77,14 +77,35 @@ jobs:
       - name: Run chart-testing (install)
         run: |
           changed=$(ct list-changed --config "${CT_CONFIGFILE}")
-          if [[ "$changed" == "charts/incubator/hyperswitch-istio" ]]; then
-            # Do not run `ct install` for enterprise-metrics
-            exit 0
-          elif [[ "$changed" == "charts/incubator/hyperswitch-keymanager" ]]; then
-            # Do not run `ct install` for snyk-exporter as it requires Snyk API token
-            exit 0
-          elif [[ "$changed" == "charts/incubator/hyperswitch-web" ]]; then
-            # Do not run `ct install` for cloudcost-exporter as it requires IRSA
+
+          # List of charts to skip
+          skip_charts=(
+            "charts/incubator/hyperswitch-istio"
+            "charts/incubator/hyperswitch-keymanager"
+            "charts/incubator/hyperswitch-web"
+          )
+
+          # Filter the list
+          filtered_charts=()
+          for chart in $changed; do
+            skip=false
+            for skip_chart in "${skip_charts[@]}"; do
+              if [[ "$chart" == "$skip_chart" ]]; then
+                echo "Skipping $chart"
+                skip=true
+                break
+              fi
+            done
+            if ! $skip; then
+              filtered_charts+=("$chart")
+            fi
+          done
+
+          # Exit if nothing to install
+          if [ ${#filtered_charts[@]} -eq 0 ]; then
+            echo "No charts to install after filtering."
             exit 0
           fi
-          ct install --config "${CT_CONFIGFILE}"
+
+          # Run `ct install` only on filtered charts
+          ct install --config "${CT_CONFIGFILE}" --charts "${filtered_charts[@]}"
