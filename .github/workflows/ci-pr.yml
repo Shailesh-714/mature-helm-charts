@@ -146,9 +146,11 @@ jobs:
 
       - name: Run Install Test
         run: |
+          echo "::group::Determine changed charts"
+          git fetch origin main
           changed=$(ct list-changed --config "${CT_CONFIGFILE}")
 
-          # Define charts to skip (can be moved to config file)
+          # Define charts to skip
           skip_charts=(
             "charts/incubator/hyperswitch-istio"
             "charts/incubator/hyperswitch-keymanager"
@@ -166,23 +168,29 @@ jobs:
                 break
               fi
             done
-
             if ! $skip; then
               filtered_charts+=("$chart")
             fi
           done
+          echo "::endgroup::"
 
           if [ ${#filtered_charts[@]} -eq 0 ]; then
             echo "No charts to install after filtering."
             exit 0
           fi
+
+          echo "::group::Running helm dependency build"
+          for chart in "${filtered_charts[@]}"; do
+            echo "Building dependencies for $chart"
+            helm dependency build "$chart"
+          done
           echo "::endgroup::"
 
+          echo "::group::Creating namespace"
           kubectl create namespace hyperswitch || true
           echo "::endgroup::"
 
           echo "::group::Running chart installation tests"
-          # Install and test charts
           ct install \
             --config "${CT_CONFIGFILE}" \
             --charts "${filtered_charts[@]}" \
