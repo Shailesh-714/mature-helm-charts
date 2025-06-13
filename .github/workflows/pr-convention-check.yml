@@ -38,47 +38,6 @@ jobs:
             console.log(`Checking PR title: "${title}"`);
 
             if (!titleRegex.test(title)) {
-              const errorMessage = `
-              ❌ **PR Title Convention Check Failed**
-
-              Your PR title "${title}" doesn't follow the required convention.
-
-              **Required format:** \`type(scope): description\`
-
-              **Valid types:**
-              ${allowedPrefixes.map(type => `\`${type}\``).join(', ')}
-
-              **Examples of valid titles:**
-              - \`feat: add user authentication system\`
-              - \`fix(api): resolve database connection timeout\`
-              - \`docs(readme): update installation instructions\`
-              - \`refactor(components): simplify button styling\`
-              - \`test: add unit tests for user service\`
-
-              **Rules:**
-              - Type must be one of the allowed types above
-              - Scope is optional but should be in parentheses if used
-              - Description must start with lowercase letter
-              - No period at the end
-              - Keep it concise but descriptive
-
-              Please update your PR title to follow this convention.
-              `;
-
-              // Try to add comment to PR, but don't fail if permissions are insufficient
-              try {
-                await github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: errorMessage
-                });
-                console.log('Comment posted successfully');
-              } catch (error) {
-                console.log('Could not post comment due to permissions:', error.message);
-                console.log('Error details will be shown in the check failure message instead');
-              }
-
               // Fail the check with detailed message
               core.setFailed(`PR title "${title}" doesn't follow the required convention. Required format: type(scope): description. Valid types: ${allowedPrefixes.join(', ')}`);
             } else {
