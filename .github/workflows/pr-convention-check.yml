@@ -1,0 +1,82 @@
+name: PR Title Convention Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title Convention
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+
+            // Define allowed prefixes (conventional commit types)
+            const allowedPrefixes = [
+              'feat', 'fix', 'docs', 'style', 'refactor',
+              'test', 'chore', 'perf', 'ci', 'build',
+              'revert', 'hotfix'
+            ];
+
+            // Define the regex pattern for PR title validation
+            // Format: type(scope): description
+            // Examples:
+            // - feat: add user authentication
+            // - fix(api): resolve timeout issue
+            // - docs(readme): update installation guide
+            const titleRegex = /^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|hotfix)(\(.+\))?: .+/;
+
+            console.log(`Checking PR title: "${title}"`);
+
+            if (!titleRegex.test(title)) {
+              const errorMessage = `
+              ❌ **PR Title Convention Check Failed**
+
+              Your PR title "${title}" doesn't follow the required convention.
+
+              **Required format:** \`type(scope): description\`
+
+              **Valid types:**
+              ${allowedPrefixes.map(type => `- \`${type}\``).join('\n')}
+
+              **Examples of valid titles:**
+              - \`feat: add user authentication system\`
+              - \`fix(api): resolve database connection timeout\`
+              - \`docs(readme): update installation instructions\`
+              - \`refactor(components): simplify button styling\`
+              - \`test: add unit tests for user service\`
+
+              **Rules:**
+              - Type must be one of the allowed types above
+              - Scope is optional but should be in parentheses if used
+              - Description must start with lowercase letter
+              - No period at the end
+              - Keep it concise but descriptive
+
+              Please update your PR title to follow this convention.
+              `;
+
+              // Add comment to PR
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: errorMessage
+              });
+
+              // Fail the check
+              core.setFailed(`PR title "${title}" doesn't follow the required convention.`);
+            } else {
+              console.log('✅ PR title follows the required convention!');
+
+              // Optional: Add success comment (remove if you don't want this)
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '✅ **PR Title Convention Check Passed** - Thank you for following the naming convention!'
+              });
+            }
