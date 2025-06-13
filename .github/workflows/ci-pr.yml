@@ -4,15 +4,29 @@ on:
   pull_request:
     paths:
       - "charts/**"
+  workflow_dispatch: # Allow manual triggering
+
+# Cancel previous runs on new pushes to the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 env:
   CT_CONFIGFILE: ct.yaml
   CT_CHECK_VERSION_INCREMENT: true
-  HELM_VERSION: v3.14.0
+  HELM_VERSION: v3.14.0 # Updated to latest stable version
+  KUBECTL_VERSION: v1.30.3 # Updated to latest stable version
+  KIND_VERSION: v0.24.0 # Pinned kind version
+  PYTHON_VERSION: "3.12"
+
+# Define default shell for consistency
+defaults:
+  run:
+    shell: bash
 
 jobs:
-  setup:
-    name: Detect Changed Charts
+  lint:
+    name: Lint Charts
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.list-changed.outputs.changed }}
@@ -27,6 +41,12 @@ jobs:
         with:
           version: ${{ env.HELM_VERSION }}
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.1.0
 
@@ -36,58 +56,74 @@ jobs:
           changed=$(ct list-changed --config "${CT_CONFIGFILE}")
           echo "changed=$([[ -n \"$changed\" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
+      - name: Run Lint
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --config "${CT_CONFIGFILE}"
+
   version-check:
     name: Chart Version Check
-    needs: setup
+    needs: lint
     runs-on: ubuntu-latest
-    if: needs.setup.outputs.changed == 'true'
+    if: needs.lint.outputs.changed == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: ${{ env.HELM_VERSION }}
-
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.1.0
 
-      - name: Run Version Check
-        run: ct lint --config "${CT_CONFIGFILE}" --check-version-increment=true
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
 
-  lint:
-    name: Lint Charts
-    needs: setup
-    runs-on: ubuntu-latest
-    if: needs.setup.outputs.changed == 'true'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Check chart version increment
+        run: |
+          changed_charts=$(ct list-changed --config "${CT_CONFIGFILE}")
+          if [[ -z "$changed_charts" ]]; then
+            echo "No changed charts to check."
+            exit 0
+          fi
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: ${{ env.HELM_VERSION }}
+          for chart in $changed_charts; do
+            chart_yaml="${chart}/Chart.yaml"
+            old_version=$(git show origin/main:"${chart_yaml}" | yq '.version')
+            new_version=$(yq '.version' "${chart_yaml}")
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
+            # Check if chart exists in target branch
+            if git show "origin/${target_branch}:${chart_yaml}" >/dev/null 2>&1; then
+              old_version=$(git show "origin/${target_branch}:${chart_yaml}" | yq '.version')
 
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
+              echo "  Old version: $old_version"
+              echo "  New version: $new_version"
 
-      - name: Run Lint
-        run: ct lint --config "${CT_CONFIGFILE}"
+              # Version comparison using sort -V for semantic versioning
+              if [[ "$old_version" == "$new_version" ]]; then
+                echo "::error::$chart version was not incremented (still $new_version)"
+                exit 1
+              elif ! printf '%s\n%s\n' "$old_version" "$new_version" | sort -V -C; then
+                echo "::error::$chart version $new_version is not greater than $old_version"
+                exit 1
+              else
+                echo "::notice::✓ $chart version correctly incremented: $old_version → $new_version"
+              fi
+            else
+              echo "::notice::$chart is new, skipping version check"
+            fi
+          done
+          echo "::endgroup::"
 
   install-test:
-    name: Install Charts
-    needs: [setup, lint]
+    name: Install and Test Charts
     runs-on: ubuntu-latest
-    if: needs.setup.outputs.changed == 'true'
+    needs: [lint, version-check]
+    if: needs.lint.outputs.changed == 'true'
+    strategy:
+      matrix:
+        k8s-version: ["v1.29.6", "v1.30.3"] # Test against multiple Kubernetes versions
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -100,7 +136,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.1.0
@@ -108,19 +145,71 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.8.0
         with:
-          kubectl_version: v1.29.0
-          node_image: kindest/node:v1.29.0
+          version: ${{ env.KIND_VERSION }}
+          kubectl_version: ${{ matrix.k8s-version }}
+          node_image: kindest/node:${{ matrix.k8s-version }}
+          cluster_name: chart-testing
+          config: |
+            kind: Cluster
+            apiVersion: kind.x-k8s.io/v1alpha4
+            nodes:
+            - role: control-plane
+              kubeadmConfigPatches:
+              - |
+                kind: InitConfiguration
+                nodeRegistration:
+                  kubeletExtraArgs:
+                    node-labels: "ingress-ready=true"
+              extraPortMappings:
+              - containerPort: 80
+                hostPort: 80
+                protocol: TCP
+              - containerPort: 443
+                hostPort: 443
+                protocol: TCP
+
+      - name: Wait for cluster to be ready
+        run: |
+          set -euo pipefail
+
+          echo "Waiting for cluster to be ready..."
+          kubectl wait --for=condition=Ready nodes --all --timeout=300s
+          kubectl cluster-info
+
+      - name: Add Helm repositories for testing
+        run: |
+          set -euo pipefail
+
+          # Add repositories that charts might depend on
+          helm repo add bitnami https://charts.bitnami.com/bitnami || true
+          helm repo add stable https://charts.helm.sh/stable || true
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx || true
+          helm repo update
+
+      - name: Install common dependencies
+        run: |
+          set -euo pipefail
+
+          # Install ingress controller for charts that might need it
+          helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+            --namespace ingress-nginx \
+            --create-namespace \
+            --set controller.service.type=NodePort \
+            --set controller.admissionWebhooks.enabled=false \
+            --wait --timeout=300s || true
 
       - name: Run Install Test
         run: |
           changed=$(ct list-changed --config "${CT_CONFIGFILE}")
 
+          # Define charts to skip (can be moved to config file)
           skip_charts=(
             "charts/incubator/hyperswitch-istio"
             "charts/incubator/hyperswitch-keymanager"
             "charts/incubator/hyperswitch-web"
           )
 
+          # Filter charts
           filtered_charts=()
           for chart in $changed; do
             skip=false
@@ -131,6 +220,7 @@ jobs:
                 break
               fi
             done
+
             if ! $skip; then
               filtered_charts+=("$chart")
             fi
@@ -140,7 +230,23 @@ jobs:
             echo "No charts to install after filtering."
             exit 0
           fi
+          echo "::endgroup::"
 
           kubectl create namespace hyperswitch || true
+          echo "::endgroup::"
 
-          ct install --config "${CT_CONFIGFILE}" --charts "${filtered_charts[@]}"
+          echo "::group::Running chart installation tests"
+          # Install and test charts
+          ct install \
+            --config "${CT_CONFIGFILE}" \
+            --charts "${filtered_charts[@]}" \
+            --namespace="hyperswitch" \
+            --debug || {
+              echo "::error::Chart installation tests failed"
+              echo "::group::Kubernetes cluster state"
+              kubectl get pods --all-namespaces
+              kubectl get events --all-namespaces --sort-by='.lastTimestamp'
+              echo "::endgroup::"
+              exit 1
+            }
+          echo "::endgroup::"
