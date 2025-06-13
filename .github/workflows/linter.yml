@@ -13,10 +13,9 @@ on:
         type: string
 
 jobs:
-  build:
-    name: Lint Code Base
+  check-helm-docs:
+    name: Check Helm Docs
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -35,6 +34,15 @@ jobs:
             echo "Documentation not up to date. Please run helm-docs and commit changes!" >&2
             exit 1
           fi
+
+  lint-code-base:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Lint Code Base
         uses: docker://github/super-linter:v3.12.0
