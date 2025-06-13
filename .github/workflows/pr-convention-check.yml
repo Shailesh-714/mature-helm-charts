@@ -46,7 +46,7 @@ jobs:
               **Required format:** \`type(scope): description\`
 
               **Valid types:**
-              ${allowedPrefixes.map(type => `- \`${type}\``).join('\n')}
+              ${allowedPrefixes.map(type => `\`${type}\``).join(', ')}
 
               **Examples of valid titles:**
               - \`feat: add user authentication system\`
@@ -83,16 +83,4 @@ jobs:
               core.setFailed(`PR title "${title}" doesn't follow the required convention. Required format: type(scope): description. Valid types: ${allowedPrefixes.join(', ')}`);
             } else {
               console.log('✅ PR title follows the required convention!');
-
-              // Try to add success comment, but don't fail if permissions are insufficient
-              try {
-                await github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: '✅ **PR Title Convention Check Passed** - Thank you for following the naming convention!'
-                });
-              } catch (error) {
-                console.log('Could not post success comment due to permissions, but check passed');
-              }
             }
