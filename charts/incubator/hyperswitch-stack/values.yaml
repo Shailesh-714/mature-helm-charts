@@ -18,7 +18,7 @@ services:
 global:
   tolerations: []
   # @ignored
-  # Eg. 
+  # Eg.
   # affinity:
   #   nodeAffinity:
   #     requiredDuringSchedulingIgnoredDuringExecution:
@@ -45,7 +45,7 @@ hyperswitch-web:
   autoBuild:
     enable: true
     forceBuild: true
-    gitCloneParam: 
+    gitCloneParam:
       gitVersion: 0.121.2
     nginxConfig:
       extraPath: v1
@@ -74,7 +74,7 @@ hyperswitch-web:
       alb.ingress.kubernetes.io/tags: stack=hyperswitch-lb
       alb.ingress.kubernetes.io/target-type: ip
     hosts:
-      - http: 
+      - http:
         paths:
           - path: /
             pathType: Prefix
@@ -111,7 +111,7 @@ hyperswitch-app:
       forex_api_key: forex_api_key
       forex_fallback_api_key: forex_fallback_api_key
     locker:
-        locker_enabled: true
+      locker_enabled: true
     run_env: sandbox
     email:
       active_email_client: SMTP
@@ -125,17 +125,17 @@ hyperswitch-app:
     minReplicas: 1
     maxReplicas: 4
     targetCPUUtilizationPercentage: 80
-  
+
   hyperswitch-card-vault:
     enabled: true
     server:
       image: docker.juspay.io/juspaydotin/hyperswitch-card-vault:v0.6.5-dev
-      tenant_secrets: 
-        hyperswitch :  
-          master_key : "8283d68fdbd89a78aef9bed8285ed1cd9310012f660eefbad865f20a3f3dd9498f06147da6a7d9b84677cafca95024990b3d2296fbafc55e10dd76df" 
-          public_key : "" 
-          schema : "public" 
-                  
+      tenant_secrets:
+        hyperswitch:
+          master_key: "8283d68fdbd89a78aef9bed8285ed1cd9310012f660eefbad865f20a3f3dd9498f06147da6a7d9b84677cafca95024990b3d2296fbafc55e10dd76df"
+          public_key: ""
+          schema: "public"
+
     initDB:
       enable: true
     postgresql:
@@ -171,12 +171,11 @@ hyperswitch-app:
       tolerations: []
     grafana:
       tolerations: []
-    prometheus: 
+    prometheus:
       prometheus-pushgateway:
         tolerations: []
   vector:
     tolerations: []
-
 
 prometheus:
   host: "prometheus-server"
@@ -189,30 +188,31 @@ prometheus:
     tolerations: []
 
   scrape_configs:
-  # Scrape Kubernetes pods for CPU and Memory usage
-  - job_name: "kubernetes-pods"
-    kubernetes_sd_configs:
-      - role: pod
-    relabel_configs:
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-        action: keep
-        regex: true
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-        action: replace
-        target_label: __metrics_path__
-        regex: (.+)
-      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-        action: replace
-        target_label: __address__
-        regex: ([^:]+)(?::\d+)?;(\d+)
-        replacement: "$1:$2"
+    # Scrape Kubernetes pods for CPU and Memory usage
+    - job_name: "kubernetes-pods"
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels:
+            [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          action: replace
+          target_label: __address__
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: "$1:$2"
 
-  - job_name: "kubernetes-nodes"
-    kubernetes_sd_configs:
-      - role: node
-    relabel_configs:
-      - action: labelmap
-        regex: __meta_kubernetes_node_label_(.+)
-    static_configs:
-      - targets:
-          - "node-exporter:9100"
+    - job_name: "kubernetes-nodes"
+      kubernetes_sd_configs:
+        - role: node
+      relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+      static_configs:
+        - targets:
+            - "node-exporter:9100"
