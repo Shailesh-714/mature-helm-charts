@@ -1,16 +1,7 @@
 name: Lint Code Base
 
-# GitHub Actions Docs:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-
 on:
-  workflow_call:
-    inputs:
-      filter_regex_include:
-        description: This sets the scope of the super linter
-        default: ".*"
-        required: false
-        type: string
+  pull_request:
 
 jobs:
   check-helm-docs:
@@ -47,9 +38,8 @@ jobs:
       - name: Lint Code Base
         uses: docker://github/super-linter:v3.12.0
         env:
-          # Exclude README.md, Chart.yaml, and NOTES.txt from linting
           FILTER_REGEX_EXCLUDE: .*(README\.md|Chart\.yaml|NOTES\.txt).*
-          FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
+          FILTER_REGEX_INCLUDE: .*
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_KUBERNETES_KUBEVAL: false
           VALIDATE_YAML: false
