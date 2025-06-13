@@ -45,7 +45,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: "pip"
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.1.0
@@ -137,7 +136,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: "pip"
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.1.0
