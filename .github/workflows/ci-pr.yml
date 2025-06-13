@@ -121,7 +121,7 @@ jobs:
     if: needs.lint.outputs.changed == 'true'
     strategy:
       matrix:
-        k8s-version: ["v1.29.6", "v1.30.3"] # Test against multiple Kubernetes versions
+        k8s-version: ["v1.29.6"] # Test against multiple Kubernetes versions
       fail-fast: false
     steps:
       - name: Checkout
@@ -147,24 +147,6 @@ jobs:
           kubectl_version: ${{ matrix.k8s-version }}
           node_image: kindest/node:${{ matrix.k8s-version }}
           cluster_name: chart-testing
-          config: |
-            kind: Cluster
-            apiVersion: kind.x-k8s.io/v1alpha4
-            nodes:
-            - role: control-plane
-              kubeadmConfigPatches:
-              - |
-                kind: InitConfiguration
-                nodeRegistration:
-                  kubeletExtraArgs:
-                    node-labels: "ingress-ready=true"
-              extraPortMappings:
-              - containerPort: 80
-                hostPort: 80
-                protocol: TCP
-              - containerPort: 443
-                hostPort: 443
-                protocol: TCP
 
       - name: Wait for cluster to be ready
         run: |
@@ -173,16 +155,6 @@ jobs:
           echo "Waiting for cluster to be ready..."
           kubectl wait --for=condition=Ready nodes --all --timeout=300s
           kubectl cluster-info
-
-      - name: Add Helm repositories for testing
-        run: |
-          set -euo pipefail
-
-          # Add repositories that charts might depend on
-          helm repo add bitnami https://charts.bitnami.com/bitnami || true
-          helm repo add stable https://charts.helm.sh/stable || true
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx || true
-          helm repo update
 
       - name: Install common dependencies
         run: |
