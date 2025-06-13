@@ -119,10 +119,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint, version-check]
     if: needs.lint.outputs.changed == 'true'
-    strategy:
-      matrix:
-        k8s-version: ["v1.29.6"] # Test against multiple Kubernetes versions
-      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -143,30 +139,8 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.8.0
         with:
-          version: ${{ env.KIND_VERSION }}
-          kubectl_version: ${{ matrix.k8s-version }}
-          node_image: kindest/node:${{ matrix.k8s-version }}
-          cluster_name: chart-testing
-
-      - name: Wait for cluster to be ready
-        run: |
-          set -euo pipefail
-
-          echo "Waiting for cluster to be ready..."
-          kubectl wait --for=condition=Ready nodes --all --timeout=300s
-          kubectl cluster-info
-
-      - name: Install common dependencies
-        run: |
-          set -euo pipefail
-
-          # Install ingress controller for charts that might need it
-          helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-            --namespace ingress-nginx \
-            --create-namespace \
-            --set controller.service.type=NodePort \
-            --set controller.admissionWebhooks.enabled=false \
-            --wait --timeout=300s || true
+          kubectl_version: v1.29.0
+          node_image: kindest/node:v1.29.0
 
       - name: Run Install Test
         run: |
