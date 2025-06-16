@@ -69,6 +69,16 @@ entries:
   hyperswitch-istio:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-06-16T07:58:28.634128525Z"
+    description: A Helm chart for Kubernetes
+    digest: ebc5611ec24e6f09348165cf70c3e611f214cfc42fae7dcba5e9e480cde565a2
+    name: hyperswitch-istio
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-istio-0.1.1/hyperswitch-istio-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-06-16T07:21:51.750610905Z"
     description: A Helm chart for Kubernetes
     digest: e3c2c525b3fce85702993f6cf9b82fa81ff94e17a10a4061bf79997aeeeec74d
@@ -130,4 +140,4 @@ entries:
     urls:
     - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-web-0.2.4/hyperswitch-web-0.2.4.tgz
     version: 0.2.4
-generated: "2025-06-16T07:21:52.421025011Z"
+generated: "2025-06-16T07:58:28.634143453Z"
