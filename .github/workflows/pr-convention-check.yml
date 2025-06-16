@@ -1,8 +1,12 @@
-name: PR Title Convention Check
+name: PR Title Check
 
 on:
   pull_request:
     types: [opened, edited, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 # Add permissions for the GITHUB_TOKEN
 permissions:
