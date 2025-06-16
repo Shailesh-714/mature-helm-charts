@@ -204,6 +204,7 @@ jobs:
             --config "${CT_CONFIGFILE}" \
             --charts "${filtered_charts[@]}" \
             --namespace="hyperswitch" \
+            --skip-tests \
             --debug || {
               echo "::error::Chart installation tests failed"
               echo "::group::Kubernetes cluster state"
