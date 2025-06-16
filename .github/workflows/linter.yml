@@ -5,7 +5,7 @@ on:
 
 jobs:
   check-helm-docs:
-    name: Check Helm Docs
+    name: Update Helm Docs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
