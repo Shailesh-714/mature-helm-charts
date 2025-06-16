@@ -150,6 +150,15 @@ jobs:
           git fetch origin main
           changed=$(ct list-changed --config "${CT_CONFIGFILE}")
 
+          charts=(
+            "charts/incubator/hyperswitch-card-vault"
+            "charts/incubator/hyperswitch-keymanager"
+            "charts/incubator/hyperswitch-istio"
+            "charts/incubator/hyperswitch-app"
+            "charts/incubator/hyperswitch-web"
+            "charts/incubator/hyperswitch-stack"
+          )
+
           # Define charts to skip
           skip_charts=(
             "charts/incubator/hyperswitch-istio"
@@ -180,7 +189,7 @@ jobs:
           fi
 
           echo "::group::Running helm dependency build"
-          for chart in "${filtered_charts[@]}"; do
+          for chart in "${charts[@]}"; do
             echo "Building dependencies for $chart"
             helm dependency build "$chart"
           done
