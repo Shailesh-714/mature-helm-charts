@@ -3,6 +3,55 @@ entries:
   hyperswitch-app:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-07-04T20:57:47.812922255Z"
+    dependencies:
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.6.1
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.38
+    - condition: hyperswitch-card-vault.enabled
+      name: hyperswitch-card-vault
+      repository: file://../hyperswitch-card-vault
+      version: 0.1.1
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 31.0.0
+    - condition: clickhouse.enabled
+      name: clickhouse
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.3.3
+    - condition: mailhog.enabled
+      name: mailhog
+      repository: https://codecentric.github.io/helm-charts
+      version: 4.0.0
+    - condition: loki.enabled
+      name: loki-stack
+      repository: https://grafana.github.io/helm-charts
+      version: 2.10.2
+    - condition: vector.enabled
+      name: vector
+      repository: https://helm.vector.dev
+      version: 0.37.0
+    - condition: opentelemetry-collector.enabled
+      name: opentelemetry-collector
+      repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+      version: 0.120.0
+    description: Hyperswitch is a community-led, open payments switch designed to
+      empower digital businesses by providing fast, reliable, and affordable access
+      to the best payments infrastructure.
+    digest: 6bc065010e0112a1f0513071d0a99168c045c711ba6b79614b9b60e1bc8fd528
+    name: hyperswitch-app
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-app-0.2.7/hyperswitch-app-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-07-04T19:41:21.361350735Z"
     dependencies:
     - condition: redis.enabled
@@ -214,6 +263,30 @@ entries:
   hyperswitch-stack:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-07-04T20:57:48.094184368Z"
+    dependencies:
+    - name: hyperswitch-app
+      repository: file://../hyperswitch-app
+      version: 0.2.7
+    - condition: hyperswitch-web.enabled
+      name: hyperswitch-web
+      repository: file://../hyperswitch-web
+      version: 0.2.4
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 27.8.0
+    description: Hyperswitch is a community-led, open payments switch designed to
+      empower digital businesses by providing fast, reliable, and affordable access
+      to the best payments infrastructure.
+    digest: 7d3bb7aff4cbdd6868db9db73bf82453d3187751925b54f41f099d45095c0c60
+    name: hyperswitch-stack
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-stack-0.2.6/hyperswitch-stack-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-07-03T19:56:58.790123821Z"
     dependencies:
     - name: hyperswitch-app
@@ -277,4 +350,4 @@ entries:
     urls:
     - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-web-0.2.4/hyperswitch-web-0.2.4.tgz
     version: 0.2.4
-generated: "2025-07-04T19:41:21.510117658Z"
+generated: "2025-07-04T20:57:48.094205016Z"
