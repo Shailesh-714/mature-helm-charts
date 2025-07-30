@@ -1,3 +1,4 @@
+{{- if .Values.services.consumer.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +6,7 @@ metadata:
     {{- with (default .Values.global.annotations .Values.consumer.annotations) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  name: hyperswitch-consumer-v1o114o0
+  name: hyperswitch-consumer-v1o115o0
   namespace: {{ .Release.Namespace }}
 spec:
   progressDeadlineSeconds: {{ default .Values.global.progressDeadlineSeconds .Values.consumer.progressDeadlineSeconds }}
@@ -14,7 +15,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.consumer.labels.app }}
-      version: consumer-v1o114o0
+      version: consumer-v1o115o0
   strategy:
     {{- with (default .Values.global.strategy .Values.consumer.strategy) }}
     {{- toYaml . | nindent 4 }}
@@ -28,7 +29,7 @@ spec:
         checksum/misc-secrets: {{ include (print $.Template.BasePath "/misc/secrets.yaml") . | sha256sum }}
       labels:
         app: {{ .Values.consumer.labels.app }}
-        version: consumer-v1o114o0
+        version: consumer-v1o115o0
     spec:
       {{- with (default .Values.global.tolerations .Values.consumer.tolerations) }}
       tolerations:
@@ -61,6 +62,7 @@ spec:
           env:
           {{- include "generic.envs" . | nindent 12 }}
           {{- include "postgresql.secrets.envs" . | nindent 12 }}
+          {{- include "keymanager.envs" . | nindent 12 }}
           envFrom:
             - secretRef:
                 name: consumer-secret-{{ .Release.Name }}
@@ -97,3 +99,4 @@ spec:
             defaultMode: 420
             name: consumer-cm-{{ .Release.Name }}
           name: hyperswitch-config
+{{- end }}

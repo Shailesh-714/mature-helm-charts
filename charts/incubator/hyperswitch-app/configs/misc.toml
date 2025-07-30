@@ -7,6 +7,10 @@ pool_size = {{ .Values.server.analytics.sqlx.pool_size }}             # Number o
 connection_timeout = {{ .Values.server.analytics.sqlx.connection_timeout }}    # Timeout for database connection in seconds
 queue_strategy = "{{ .Values.server.analytics.sqlx.queue_strategy }}"   # Add the queue strategy used by the database bb8 client
 
+[kv_config]
+ttl = {{ .Values.server.kv_config.tls }}
+soft_kill = {{ .Values.server.kv_config.soft_kill }}
+
 [paze_decrypt_keys]
 paze_private_key = "{{ .Values.server.paze_decrypt_keys.paze_private_key }}"                       # Base 64 Encoded Private Key File cakey.pem generated for Paze -> Command to create private key: openssl req -newkey rsa:2048 -x509 -keyout cakey.pem -out cacert.pem -days 365
 paze_private_key_passphrase = "{{ .Values.server.paze_decrypt_keys.paze_private_key_passphrase }}" # PEM Passphrase used for generating Private Key File cakey.pem
@@ -58,6 +62,7 @@ payout_analytics_topic = "{{ .Values.server.events.kafka.payout_analytics_topic 
 consolidated_events_topic = "{{ .Values.server.events.kafka.consolidated_events_topic }}"      # Kafka topic to be used for Consolidated events
 authentication_analytics_topic = "{{ .Values.server.events.kafka.authentication_analytics_topic }}" # Kafka topic to be used for Authentication events
 fraud_check_analytics_topic = "{{ .Values.server.events.kafka.fraud_check_analytics_topic }}"    # Kafka topic to be used for Fraud Check events
+routing_logs_topic = "{{ .Values.server.events.kafka.routing_logs_topic }}"
 
 [forex_api]          
 data_expiration_delay_in_seconds = {{ .Values.server.forex_api.data_expiration_delay_in_seconds }}
@@ -96,6 +101,9 @@ bg_metrics_collection_interval_in_secs = {{ .Values.server.log.telemetry.bg_metr
 [lock_settings]
 delay_between_retries_in_milliseconds = {{ .Values.server.lock_settings.delay_between_retries_in_milliseconds }} # Delay between retries in milliseconds
 redis_lock_expiry_seconds = {{ .Values.server.lock_settings.redis_lock_expiry_seconds }}             # Seconds before the redis lock expires
+
+[merchant_id_auth]
+merchant_id_auth_enabled = {{ .Values.server.merchant_id_auth.merchant_id_auth_enabled }}
 
 [master_database]
 pool_size = "{{ .Values.server.master_database.pool_size }}"
@@ -200,6 +208,13 @@ request_body_limit = {{ .Values.server.server.request_body_limit }} # Post reque
 shutdown_timeout = {{ .Values.server.server.shutdown_timeout }}
 workers = {{ .Values.server.server.workers }}
 
+[crm]
+crm_manager = "{{ .Values.server.crm.crm_manager }}"
+ 
+[crm.hubspot_proxy]
+form_id = "{{ .Values.server.crm.hubspot_proxy.form_id }}"     
+request_url = "{{ .Values.server.crm.hubspot_proxy.request_url }}"
+
 # Secrets manager client to be used
 {{- toToml (dict "secrets_management" .Values.server.secrets_management) | nindent 0 }}
 
@@ -236,3 +251,10 @@ background_color = "{{ .Values.server.theme.email_config.entity_name }}"
 
 [connectors.unified_authentication_service] 
 base_url = "{{ .Values.server.connectors.unified_authentication_service.base_url }}" 
+
+[connectors.hyperswitch_vault] 
+base_url = "{{ .Values.server.connectors.hyperswitch_vault }}"
+
+[clone_connector_allowlist]
+merchant_ids = "{{ .Values.server.clone_connector_allowlist.merchant_ids }}"
+connector_names = "{{ .Values.server.clone_connector_allowlist.connector_names }}"   

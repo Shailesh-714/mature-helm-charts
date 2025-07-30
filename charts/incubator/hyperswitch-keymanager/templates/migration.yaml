@@ -10,9 +10,6 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
-    metadata:
-      annotations:
-        sidecar.istio.io/inject: "false"
     spec:
       restartPolicy: OnFailure
       initContainers:
@@ -46,11 +43,16 @@ spec:
             - name: POSTGRES_HOST
               value: {{ include "keymanager-psql.host" . }}
             - name: DBNAME
-              value: {{ include "keymanager-psql.name" . }}
+              value: {{ include "keymanager-psql.database" . }}
             - name: POSTGRES_USER
               value: {{ include "keymanager-psql.username" . }}
             - name: POSTGRES_PASSWORD
-              value: {{ include "keymanager-psql.password" . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "keymanager-psql.secret" . }}
+                  {{- if .Values.postgresql.enabled }}
+                  key: password
+                  {{- else if .Values.external.postgresql.enabled }}
+                  key: primaryPlainPassword
+                  {{- end }}
 {{- end }}
-
-

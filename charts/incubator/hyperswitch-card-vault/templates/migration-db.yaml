@@ -10,9 +10,6 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
-    metadata:
-      annotations:
-          sidecar.istio.io/inject: "false"
     spec:
       restartPolicy: OnFailure
 
@@ -43,7 +40,7 @@ spec:
               curl -L -o hyperswitch-card-vault.tar.gz https://github.com/juspay/hyperswitch-card-vault/archive/refs/tags/$VERSION.tar.gz
               tar -xzvf hyperswitch-card-vault.tar.gz --transform 's|[^/]*/|hyperswitch-card-vault/|'
               cd hyperswitch-card-vault
-
+              
               echo "Running Diesel migrations"
               diesel migration run \
                 --database-url postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$DBNAME

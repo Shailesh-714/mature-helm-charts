@@ -2,7 +2,7 @@
 
 All notable changes to HyperSwitch-Helm will be documented here.
 
----
+- - -
 
 ## [0.1.3] - 2024-09-30
 
@@ -13,7 +13,7 @@ All notable changes to HyperSwitch-Helm will be documented here.
 
 ### 🚜 Refactor
 
-- _(helm)_ Using TOML for configuring hyperswitch backend instead of environment variables (#90)
+- *(helm)* Using TOML for configuring hyperswitch backend instead of environment variables (#90)
 - Update istio helm index (#95)
 - Update packages for hyperswitch-istio (#96)
 - Update istio helm package index (#97)
@@ -32,7 +32,7 @@ All notable changes to HyperSwitch-Helm will be documented here.
 
 ### 🐛 Bug Fixes
 
-- _(sdk-demo)_ Fix hyperloader js url in demo app (#88)
+- *(sdk-demo)* Fix hyperloader js url in demo app (#88)
 
 ## [0.1.2] - 2024-04-04
 
@@ -42,14 +42,16 @@ All notable changes to HyperSwitch-Helm will be documented here.
 
 ### Helm
 
-- Create and package new version v0.1.0
-- Create and package new version v0.1.0 (#77)
+- Create and package new version v0.1.1 
+- Create and package new version v0.1.1 (#77)
 - Update version for helm-stack (#82)
 - Add support to configure secrets manager at runtime (#84)
 - Update version in deployment.yaml (#85)
 - Create version v0.1.2 (#86)
 - Move common secrets to hyperswitch-secrets (#87)
 
-## [0.1.0] - 2024-03-21
+## [0.1.1] - 2024-03-21
 
 ### Helm
+
+
