@@ -1,5 +1,119 @@
 apiVersion: v1
 entries:
+  hyperswitch-app:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-07-31T12:33:32.981663221Z"
+    dependencies:
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.6.1
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.38
+    - condition: hyperswitch-card-vault.enabled
+      name: hyperswitch-card-vault
+      repository: file://../hyperswitch-card-vault
+      version: 0.1.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 31.0.0
+    - condition: clickhouse.enabled
+      name: clickhouse
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.3.3
+    - condition: mailhog.enabled
+      name: mailhog
+      repository: https://codecentric.github.io/helm-charts
+      version: 4.0.0
+    - condition: vector.enabled
+      name: vector
+      repository: https://helm.vector.dev
+      version: 0.37.0
+    description: Hyperswitch is a community-led, open payments switch designed to
+      empower digital businesses by providing fast, reliable, and affordable access
+      to the best payments infrastructure.
+    digest: a0d48e2cac5150fa8c0ecc6b4d525bd0946bd7c1b4c0a48b37fc4002e4aaf146
+    name: hyperswitch-app
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-app-0.2.8/hyperswitch-app-0.2.8.tgz
+    version: 0.2.8
+  hyperswitch-card-vault:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-07-31T12:33:33.113091356Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.38
+    description: A Helm chart for creating Hyperswitch Card Vault
+    digest: c44a7477e261ebc9d6654b15f07a447d15f458ef6701fa3aff80be579b730eb1
+    name: hyperswitch-card-vault
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-card-vault-0.1.0/hyperswitch-card-vault-0.1.0.tgz
+    version: 0.1.0
+  hyperswitch-istio:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-07-31T12:33:33.325523142Z"
+    description: A Helm chart for Kubernetes
+    digest: 728e9fe2f23d159280592f7b783c4d1926d6f437a43bddd6bdf822ee752a5426
+    name: hyperswitch-istio
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-istio-0.1.0/hyperswitch-istio-0.1.0.tgz
+    version: 0.1.0
+  hyperswitch-keymanager:
+  - apiVersion: v2
+    appVersion: 0.1.8
+    created: "2025-07-31T12:33:33.50323029Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.38
+    description: A Helm chart for deploying Hyperswitch Keymanager
+    digest: 9e67ecf7b94782ad1bc9bf43737388940ead408db8d1d4d755f613e829606ea0
+    name: hyperswitch-keymanager
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-keymanager-0.1.0/hyperswitch-keymanager-0.1.0.tgz
+    version: 0.1.0
+  hyperswitch-monitoring:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-07-31T12:33:33.767186661Z"
+    dependencies:
+    - condition: kube-prometheus-stack.enabled
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 65.1.1
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: 6.16.0
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: 6.16.0
+    - condition: opentelemetry-collector.enabled
+      name: opentelemetry-collector
+      repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+      version: 0.120.0
+    description: Monitoring stack for Hyperswitch including Prometheus, Loki, Promtail,
+      and Grafana
+    digest: 91cf575f70c17f6a029ed0d3072ded81f7e5b7e3ec7871995076e1803cf80d9a
+    name: hyperswitch-monitoring
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-monitoring-0.1.0/hyperswitch-monitoring-0.1.0.tgz
+    version: 0.1.0
   hyperswitch-stack:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -277,4 +391,36 @@ entries:
     urls:
     - https://juspay.github.io/hyperswitch-helm/v0.1.1/hyperswitch-stack-0.1.1.tgz
     version: 0.1.1
-generated: "2025-07-23T16:51:41.601625+05:30"
+  hyperswitch-ucs:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2025-07-31T12:33:34.178998819Z"
+    description: A Helm chart for Hyperswitch UCS Service
+    digest: 912fe29a3ab6c392787c6a822d177f23428bff2be29cf563d3b47193bbb97159
+    keywords:
+    - ucs
+    - service
+    - grpc
+    name: hyperswitch-ucs
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-ucs-0.1.0/hyperswitch-ucs-0.1.0.tgz
+    version: 0.1.0
+  hyperswitch-web:
+  - apiVersion: v2
+    appVersion: 0.15.8
+    created: "2025-07-31T12:33:34.354376216Z"
+    description: 'Helm chart for Hyperswitch SDK static Server. This chart allow end
+      user to deploy standalone  [SDK](https://github.com/juspay/hyperswitch-web)
+      with different way:   - prebuilt nginx static server (deployment - required
+      a specific docker build)    - autobuild nginx static server (statefulset and
+      assets saved in PVC)   The prebuilt image is suitable for production, no building
+      time. Autobuild is suitable to quick start, assets are built in initContainer
+      and saved in PVC. Nginx container will serve  assets'
+    digest: 26e3dac1d2244d00fb7222287454701d4b7079b0c4f0f66b60c4535c4b1efb7a
+    name: hyperswitch-web
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-web-0.2.7/hyperswitch-web-0.2.7.tgz
+    version: 0.2.7
+generated: "2025-07-31T12:33:34.354417193Z"
