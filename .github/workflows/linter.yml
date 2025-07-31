@@ -24,9 +24,11 @@ jobs:
       - name: Check Helm-Docs updated
         run: |
           docker run --rm \
-            --volume "$(pwd):/helm-docs" \
-            -u "$(id -u):$(id -g)" \
-            jnorwood/helm-docs:latest
+          -v $(pwd):/helm-docs \
+          -w /helm-docs \
+          jnorwood/helm-docs:v1.11.0 \
+          --document-dependency-values=true \
+          --chart-search-root=charts/incubator
 
           # Check for uncommitted changes after helm-docs
           if ! git diff --exit-code; then
