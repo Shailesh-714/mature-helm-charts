@@ -7,4 +7,3 @@ generate-release-notes: true
 make-release-latest: true
 pages-branch: gh-pages
 pages-index-path: index.yaml
-skip-existing: false
