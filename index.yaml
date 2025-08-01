@@ -72,6 +72,21 @@ entries:
   hyperswitch-keymanager:
   - apiVersion: v2
     appVersion: 0.1.8
+    created: "2025-08-01T10:30:48.672801244Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.38
+    description: A Helm chart for deploying Hyperswitch Keymanager
+    digest: f96652eddc2bac6520276577c6f3c2349a6bfb0102cd16d7dd9e4c7ff9978620
+    name: hyperswitch-keymanager
+    type: application
+    urls:
+    - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-keymanager-0.1.2/hyperswitch-keymanager-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.1.8
     created: "2025-07-31T12:33:33.50323029Z"
     dependencies:
     - condition: postgresql.enabled
@@ -423,4 +438,4 @@ entries:
     urls:
     - https://github.com/Shailesh-714/mature-helm-charts/releases/download/hyperswitch-web-0.2.7/hyperswitch-web-0.2.7.tgz
     version: 0.2.7
-generated: "2025-07-31T19:02:25.153119635Z"
+generated: "2025-08-01T10:30:48.672835278Z"
