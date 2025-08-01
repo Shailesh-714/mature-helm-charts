@@ -138,13 +138,13 @@ Refer our [postman collection](https://www.postman.com/hyperswitch/workspace/hyp
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../hyperswitch-card-vault | hyperswitch-card-vault | 0.1.1 |
 | https://charts.bitnami.com/bitnami | clickhouse | 6.3.3 |
 | https://charts.bitnami.com/bitnami | kafka | 31.0.0 |
 | https://charts.bitnami.com/bitnami | postgresql | 15.5.38 |
 | https://charts.bitnami.com/bitnami | redis | 18.6.1 |
 | https://codecentric.github.io/helm-charts | mailhog | 4.0.0 |
 | https://helm.vector.dev | vector | 0.37.0 |
+| https://juspay.github.io/hyperswitch-helm | hyperswitch-card-vault | 0.1.1 |
 
 ## Values
 <h3>Dependencies configuration</h3>
@@ -720,18 +720,6 @@ Refer our [postman collection](https://www.postman.com/hyperswitch/workspace/hyp
 </thead>
 
 <tbody><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L8">global.affinity</a></div></td>
-    <td><div><code>{}</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L4">global.annotations</a></div></td>
-    <td><div><code>{}</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L5">global.tolerations</a></div></td>
-    <td><div><code>[]</code></div></td>
-    <td></td>
-  </tr><tr>
     <td><div><a href="./values.yaml#L1118">autoscaling.enabled</a></div></td>
     <td><div><code>true</code></div></td>
     <td></td>
@@ -1796,218 +1784,6 @@ Refer our [postman collection](https://www.postman.com/hyperswitch/workspace/hyp
   </tr><tr>
     <td><div><a href="./values.yaml#L3">services.router.enabled</a></div></td>
     <td><div><code>true</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L12">hyperswitch-card-vault.backend</a></div></td>
-    <td><div><code>"local"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L179">hyperswitch-card-vault.external.postgresql.config.database</a></div></td>
-    <td><div><code>null</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L175">hyperswitch-card-vault.external.postgresql.config.host</a></div></td>
-    <td><div><code>null</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L178">hyperswitch-card-vault.external.postgresql.config.password</a></div></td>
-    <td><div><code>null</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L176">hyperswitch-card-vault.external.postgresql.config.port</a></div></td>
-    <td><div><code>null</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L177">hyperswitch-card-vault.external.postgresql.config.username</a></div></td>
-    <td><div><code>null</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L173">hyperswitch-card-vault.external.postgresql.enabled</a></div></td>
-    <td><div><code>false</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L186">hyperswitch-card-vault.initDB.checkPGisUp.image</a></div></td>
-    <td><div><code>"postgres:16-alpine3.19"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L187">hyperswitch-card-vault.initDB.checkPGisUp.maxAttempt</a></div></td>
-    <td><div><code>30</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L184">hyperswitch-card-vault.initDB.enable</a></div></td>
-    <td><div><code>true</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L189">hyperswitch-card-vault.initDB.migration.image</a></div></td>
-    <td><div><code>"christophwurst/diesel-cli:latest"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L163">hyperswitch-card-vault.postgresql.architecture</a></div></td>
-    <td><div><code>"standalone"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L162">hyperswitch-card-vault.postgresql.auth.database</a></div></td>
-    <td><div><code>"locker-db"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L161">hyperswitch-card-vault.postgresql.auth.password</a></div></td>
-    <td><div><code>"dummyPassword"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L160">hyperswitch-card-vault.postgresql.auth.username</a></div></td>
-    <td><div><code>"db_user"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L157">hyperswitch-card-vault.postgresql.enabled</a></div></td>
-    <td><div><code>true</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L158">hyperswitch-card-vault.postgresql.nameOverride</a></div></td>
-    <td><div><code>"locker-db"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L165">hyperswitch-card-vault.postgresql.primary.name</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L169">hyperswitch-card-vault.postgresql.primary.resources.requests.cpu</a></div></td>
-    <td><div><code>"100m"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L166">hyperswitch-card-vault.postgresql.primary.tolerations</a></div></td>
-    <td><div><code>[]</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L135">hyperswitch-card-vault.secrets.api_client.identity</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L117">hyperswitch-card-vault.secrets.aws.key_id</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L118">hyperswitch-card-vault.secrets.aws.region</a></div></td>
-    <td><div><code>"us-east-1"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L112">hyperswitch-card-vault.secrets.database.password</a></div></td>
-    <td><div><code>"dummyPassword"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L131">hyperswitch-card-vault.secrets.external_key_manager.cert</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L80">hyperswitch-card-vault.secrets.locker_private_key</a></div></td>
-    <td><div><code>"-----BEGIN RSA PRIVATE KEY-----...-----END RSA PRIVATE KEY-----"</code></div></td>
-    <td>To create this key pairs, follow the instructions provided here: </br> # Generating the private keys <pre>openssl genrsa -out locker-private-key.pem 2048</pre> <pre>openssl genrsa -out tenant-private-key.pem 2048</pre> # Generating the public keys </br> <pre>openssl rsa -in locker-private-key.pem -pubout -out locker-public-key.pem</pre> <pre>openssl rsa -in tenant-private-key.pem -pubout -out tenant-public-key.pem</pre> The private key for the locker from locker-private-key.pem</td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L126">hyperswitch-card-vault.secrets.tls.certificate</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L127">hyperswitch-card-vault.secrets.tls.private_key</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L122">hyperswitch-card-vault.secrets.vault.token</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L34">hyperswitch-card-vault.server.affinity</a></div></td>
-    <td><div><code>{}</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L17">hyperswitch-card-vault.server.annotations</a></div></td>
-    <td><div><code>{}</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L55">hyperswitch-card-vault.server.apiClient.identity</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L58">hyperswitch-card-vault.server.awsKms.keyId</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L59">hyperswitch-card-vault.server.awsKms.region</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L52">hyperswitch-card-vault.server.externalKeyManager.cert</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L51">hyperswitch-card-vault.server.externalKeyManager.url</a></div></td>
-    <td><div><code>"http://localhost:5000"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L48">hyperswitch-card-vault.server.extra.env</a></div></td>
-    <td><div><code>{}</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L22">hyperswitch-card-vault.server.host</a></div></td>
-    <td><div><code>"0.0.0.0"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L26">hyperswitch-card-vault.server.image</a></div></td>
-    <td><div><code>"docker.juspay.io/juspaydotin/hyperswitch-card-vault:v0.6.5-dev"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L31">hyperswitch-card-vault.server.pod.annotations</a></div></td>
-    <td><div><code>{}</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L23">hyperswitch-card-vault.server.port</a></div></td>
-    <td><div><code>"8080"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L62">hyperswitch-card-vault.server.vault.url</a></div></td>
-    <td><div><code>"http://127.0.0.1:8200"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L24">hyperswitch-card-vault.server.version</a></div></td>
-    <td><div><code>"v0.6.5"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L140">hyperswitch-card-vault.tenant_secrets.public.master_key</a></div></td>
-    <td><div><code>"8283d68fdbd89a78aef9bed8285ed1cd9310012f660eefbad865f20a3f3dd9498f06147da6a7d9b84677cafca95024990b3d2296fbafc55e10dd76df"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L143">hyperswitch-card-vault.tenant_secrets.public.public_key</a></div></td>
-    <td><div><code>"-----BEGIN PUBLIC KEY-----...-----END PUBLIC KEY-----"</code></div></td>
-    <td>The public key for the tenant from tenant_secrets-public-public_key.pem</td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L153">hyperswitch-card-vault.tenant_secrets.public.schema</a></div></td>
-    <td><div><code>"public"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L196">hyperswitch-card-vault.vaultKeysJob.checkVaultService.host</a></div></td>
-    <td><div><code>""</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L194">hyperswitch-card-vault.vaultKeysJob.checkVaultService.image</a></div></td>
-    <td><div><code>"curlimages/curl:8.7.1"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L195">hyperswitch-card-vault.vaultKeysJob.checkVaultService.maxAttempt</a></div></td>
-    <td><div><code>30</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L197">hyperswitch-card-vault.vaultKeysJob.checkVaultService.port</a></div></td>
-    <td><div><code>80</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L192">hyperswitch-card-vault.vaultKeysJob.enabled</a></div></td>
-    <td><div><code>true</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L199">hyperswitch-card-vault.vaultKeysJob.keys.key1</a></div></td>
-    <td><div><code>"3c82773a6621feee3d5e0ce96654bf1f"</code></div></td>
-    <td></td>
-  </tr><tr>
-    <td><div><a href="../hyperswitch-card-vault/values.yaml#L200">hyperswitch-card-vault.vaultKeysJob.keys.key2</a></div></td>
-    <td><div><code>"7de95dbbd5d020e6b2a44847b8942bf5"</code></div></td>
     <td></td>
   </tr>
 </tbody>
