@@ -29,6 +29,11 @@ jobs:
         with:
           version: v3.14.0
 
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
       - name: Add helm repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -49,14 +54,61 @@ jobs:
             fi
           done
 
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          # Create a directory for release notes
+          mkdir -p .release-notes
+          
+          # Function to extract changes from Chart.yaml annotations
+          generate_chart_notes() {
+            local chart_path=$1
+            local chart_name=$(basename $chart_path)
+            local version=$(yq '.version' $chart_path/Chart.yaml)
+            
+            echo "## $chart_name v$version"
+            echo ""
+            
+            # Check if annotations exist
+            if yq -e '.annotations."artifacthub.io/changes"' $chart_path/Chart.yaml > /dev/null 2>&1; then
+              echo "### What's Changed"
+              yq '.annotations."artifacthub.io/changes"' $chart_path/Chart.yaml | yq -r '.[] | "- \(.description)"'
+              echo ""
+            fi
+            
+            # Add upgrade notes if they exist
+            if [ -f "$chart_path/UPGRADE.md" ]; then
+              echo "### Upgrade Notes"
+              echo "See [UPGRADE.md]($chart_path/UPGRADE.md) for detailed upgrade instructions."
+              echo ""
+            fi
+            
+            echo "### Installation"
+            echo '```bash'
+            echo "helm repo add hyperswitch https://juspay.github.io/hyperswitch-helm"
+            echo "helm repo update"
+            echo "helm install $chart_name hyperswitch/$chart_name --version $version"
+            echo '```'
+            echo ""
+          }
+          
+          # Generate notes for each changed chart
+          for chart in charts/incubator/*; do
+            if [ -f "$chart/Chart.yaml" ]; then
+              generate_chart_notes $chart > .release-notes/$(basename $chart).md
+            fi
+          done
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts/incubator
           config: cr.yaml
+          mark_as_latest: false
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_SKIP_EXISTING: "true"
+          CR_RELEASE_NOTES_FILE: .release-notes/{{ .Name }}.md
 
       - name: Login to GHCR
         uses: docker/login-action@v3
