@@ -74,5 +74,5 @@ jobs:
             fi
             REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
             REPO_NAME=${{ github.event.repository.name }}
-            helm push "${pkg}" "oci://ghcr.io/${REPO_OWNER}/hyperswitch-helm"
+            helm push "${pkg}" "oci://ghcr.io/${REPO_OWNER}/${REPO_NAME}"
           done
