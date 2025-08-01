@@ -15,7 +15,7 @@ dependencies:
     condition: postgresql.enabled
   - name: hyperswitch-card-vault
     version: 0.1.1
-    repository: "file://../hyperswitch-card-vault"
+    repository: "https://juspay.github.io/hyperswitch-helm"
     condition: hyperswitch-card-vault.enabled
   - name: kafka
     version: 31.0.0
