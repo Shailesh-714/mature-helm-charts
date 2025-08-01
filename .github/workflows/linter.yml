@@ -39,6 +39,7 @@ jobs:
 
   helm-ct-lint:
     name: Helm Chart Lint
+    needs: super-linter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
