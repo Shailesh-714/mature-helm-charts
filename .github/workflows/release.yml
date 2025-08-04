@@ -26,6 +26,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name "helm-release-bot[bot]"
+          git config --global user.email "helm-release-bot[bot]@users.noreply.github.com"
+
       - name: Checkout using GitHub App token
         uses: actions/checkout@v4
         with:
