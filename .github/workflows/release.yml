@@ -6,6 +6,7 @@ on:
     branches:
       - st
 
+# This workflow is triggered manually or on pushes to the 'st' branch.
 permissions: {}
 
 jobs:
