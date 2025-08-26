@@ -106,7 +106,7 @@ jobs:
               if [ ! -z "$image" ]; then
                 echo "Pulling and attaching image: $image"
                 if docker pull "$image"; then
-                  oras attach "$CHART_REF" --artifact-type application/vnd.oci.image.manifest.v1+json "$image"
+                  oras attach "$CHART_REF" --artifact-type application/vnd.oci.image.config.v1+json "$image"
                   echo "Successfully attached: $image"
                 else
                   echo "Failed to pull image: $image"
