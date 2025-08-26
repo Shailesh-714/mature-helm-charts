@@ -104,14 +104,27 @@ jobs:
             # Pull and attach each image
             while IFS= read -r image; do
               if [ ! -z "$image" ]; then
-                echo "Pulling and attaching image: $image"
-                if docker pull "$image"; then
-                  echo "Running: oras attach $CHART_REF --artifact-type application/vnd.oci.image.config.v1+json $image"
-                  oras attach "$CHART_REF" --artifact-type application/vnd.oci.image.config.v1+json "$image"
-                  echo "Successfully attached: $image"
-                else
-                  echo "Failed to pull image: $image"
+                echo "Pulling image: $image"
+                if ! docker pull "$image"; then
+                  echo "Failed to pull image: $image. Skipping attachment."
+                  continue
                 fi
+
+                # Save image manifest to file
+                MANIFEST_FILE="manifest-$(echo "$image" | sed 's/[^a-zA-Z0-9_.-]/-/g').json"
+                docker manifest inspect "$image" > "$MANIFEST_FILE"
+
+                if [ ! -f "$MANIFEST_FILE" ]; then
+                  echo "Failed to inspect manifest for $image."
+                  continue
+                fi
+
+                echo "Attaching manifest file: $MANIFEST_FILE for image: $image"
+                # Attach the manifest file with correct ORAS syntax
+                oras attach "$CHART_REF" --artifact-type application/vnd.oci.image.manifest.v1+json "$MANIFEST_FILE"
+                echo "Successfully attached: $image"
+
+                rm -f "$MANIFEST_FILE"
               fi
             done < "images-${CHART_NAME}.txt"
 
