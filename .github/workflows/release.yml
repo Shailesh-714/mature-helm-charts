@@ -78,41 +78,41 @@ jobs:
           shopt -s nullglob
           REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           REPO_NAME=${{ github.event.repository.name }}
-          
+
           for pkg in .cr-release-packages/*.tgz; do
             if [ -z "${pkg:-}" ]; then
               break
             fi
-            
+
             # Push chart first
             helm push "${pkg}" "oci://ghcr.io/${REPO_OWNER}/${REPO_NAME}"
-            
+
             # Extract chart name and version from package filename
             PKG_NAME=$(basename "${pkg}" .tgz)
             CHART_NAME=$(echo "${PKG_NAME}" | sed 's/-[0-9].*//')
             CHART_VERSION=$(echo "${PKG_NAME}" | sed 's/.*-\([0-9].*\)/\1/')
             CHART_REF="ghcr.io/${REPO_OWNER}/${REPO_NAME}/${CHART_NAME}:${CHART_VERSION}"
-            
+
             echo "Processing chart: ${CHART_NAME}:${CHART_VERSION}"
-            
+
             # Extract all images using helm template
             helm template "${pkg}" | grep "image:" | sort -u | sed 's/.*image: *"*\([^"]*\)"*.*/\1/' > "images-${CHART_NAME}.txt"
-            
+
             echo "Found images for ${CHART_NAME}:"
             cat "images-${CHART_NAME}.txt"
-            
+
             # Pull and attach each image
             while IFS= read -r image; do
               if [ ! -z "$image" ]; then
                 echo "Pulling and attaching image: $image"
                 if docker pull "$image"; then
-                  oras attach "$CHART_REF" --artifact-type application/vnd.docker.distribution.manifest.v2+json "$image"
+                  oras attach "$CHART_REF" --artifact-type application/vnd.oci.image.manifest.v1+json "$image"
                   echo "Successfully attached: $image"
                 else
                   echo "Failed to pull image: $image"
                 fi
               fi
             done < "images-${CHART_NAME}.txt"
-            
+
             rm -f "images-${CHART_NAME}.txt"
           done
